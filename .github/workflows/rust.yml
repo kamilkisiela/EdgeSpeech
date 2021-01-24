@@ -1,0 +1,21 @@
+name: Rust
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Pull docker container for cross-compilation
+        run: docker pull clux/muslrust
+
+      - name: compile
+        run: docker run -v ${GITHUB_WORKSPACE}:/volume --rm -t clux/muslrust cargo build --release
+
+      - run: |
+          ls -l target/x86_64-unknown-linux-musl/release/edge_speech
+          file target/x86_64-unknown-linux-musl/release/edge_speech
